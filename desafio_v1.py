@@ -5,11 +5,11 @@ class Cliente:
     def __init__(self, endereco):
         self.endereco = endereco
         self.contas = []
-    def realizar_transacao(conta: Conta, transacao: Transacao):
-        transacao.registro(Conta)
+    def realizar_transacao(self, conta, transacao):
+        transacao.registro(conta)
 
-    def adicionar_conta(conta:Conta):
-        self.contas.append(Conta)
+    def adicionar_conta(self,conta):
+        self.contas.append(conta)
         
 
 
@@ -87,11 +87,52 @@ class Conta:
 
 
 class ContaCorrente(Conta):
-    pass
+    def __init__(self, numero, cliente, limite=500, limite_saques=3):
+        super().__init__(numero, cliente)
+        self.limite = limite
+        self.limite_saques = limite_saques
 
+    def sacar(self, valor):
+        numero_saques = len(
+            [transacao for transacao in self.hirtorico.transacoes if transacao["tipo"] == Saque.__name__]
+        )
+        excedeu_limite = valor > self.limite
+        excedeu_saques = numero_saques >= self.limite_saques
+
+
+        if excedeu_limite:
+            print("\n Operacao falhou!! O valor do saque excedeu ")
+        elif excedeu_saques:
+            print("operacao falhou! numero de saques excedido")
+
+        else:
+            return super().sacar(valor)
+        return False
+
+    def __str__(self):
+        return f"""\
+            Agência: \t{self.agencia}
+            C/C: \t\t{self.numero}
+            Título: \t{self.cliente.nome}
+            """
+          
 
 class Historico:
-    pass
+    def __init__(self):
+        self._transacoes = []
+
+@property
+def transacoes(self):
+    return self._transacoes
+
+def adicionar_transacao(self, transacao):
+    self._transacoes.append(
+        {
+            "tipo": transacao.__class__.__name__,
+            "valor": transacao.valor,
+            "data": datetime.now().strftime("%d-%m-%y %H:%M:%S"),
+        }
+    )
 
 
 class Transacao(ABC):
